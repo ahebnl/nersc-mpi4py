@@ -1,0 +1,14 @@
+(/global/common/software/mXXXX/anhe-py3/my_mpi4py_env) anhe@nid200034:~/nersc-mpi4py> make -f makefile.nersc 
+cc -I/global/common/software/mXXXX/anhe-py3/lib/python3.10/site-packages/mpi4py/include/ -fPIC -shared    -I/global/common/software/mXXXX/anhe-py3/my_mpi4py_env/include/python3.11 -I/global/common/software/mXXXX/anhe-py3/my_mpi4py_env/include/python3.11 -DNDEBUG -fwrapv -O2 -Wall -fPIC -O2 -isystem /global/common/software/mXXXX/anhe-py3/my_mpi4py_env/include -fPIC -O2 -isystem /global/common/software/mXXXX/anhe-py3/my_mpi4py_env/include -L/global/common/software/mXXXX/anhe-py3/my_mpi4py_env/lib/python3.11/config-3.11-x86_64-linux-gnu -lpthread -ldl -lutil -lm -o helloworld.cpython-311-x86_64-linux-gnu.so helloworld.c
+srun -n 4 python test.py
+You passed MPI_COMM_NULL !!!
+Hello, World! I am process 1 of 4 on nid200034.
+You passed MPI_COMM_NULL !!!
+Hello, World! I am process 3 of 4 on nid200034.
+You passed MPI_COMM_NULL !!!
+Hello, World! I am process 2 of 4 on nid200034.
+You passed MPI_COMM_NULL !!!
+Hello, World! I am process 0 of 4 on nid200034.
+rm -f -r helloworld.cpython-311-x86_64-linux-gnu.so __pycache__
+
+

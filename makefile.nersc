@@ -1,0 +1,40 @@
+.PHONY: default build test clean
+default: build test clean
+
+EXT_SUFFIX = $(shell ${PYTHON_CONFIG} --extension-suffix)
+LIB_SUFFIX = $(suffix $(EXT_SUFFIX))
+
+MODULE = helloworld
+SOURCE = $(MODULE).c
+TARGET = $(MODULE)$(EXT_SUFFIX)
+
+CC_SHARED = -fPIC
+LD_SHARED = -shared
+
+dir := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+
+PYTHON = python$(py)
+PYTHON_CONFIG = $(PYTHON) python-config
+PYTHON_INCLUDE   = $(shell $(PYTHON_CONFIG) --includes)
+
+PYCCFLAGS = $(shell $(PYTHON_CONFIG) --cflags)
+PYLDFLAGS = $(shell $(PYTHON_CONFIG) --ldflags)
+
+CC_FLAGS  = $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(PYCCFLAGS) $(PYLDFLAGS)
+CC_FLAGS_SHARED  = $(CC_SHARED) $(LD_SHARED) $(CC_FLAGS)
+
+MPICC = cc
+MPI4PY_INCLUDE   = -I/global/common/software/m2173/anhe-py3/lib/python3.10/site-packages/mpi4py/include/
+MPIEXEC_PYTHON = srun python -n 4
+
+
+$(TARGET): $(SOURCE)
+	$(MPICC) $(MPI4PY_INCLUDE) $(CC_FLAGS_SHARED) -o $@ $<
+
+build: $(TARGET)
+
+test: build
+	srun -n 4 python test.py
+
+clean:
+	$(RM) -r $(TARGET) __pycache__
